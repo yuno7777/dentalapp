@@ -5,7 +5,7 @@ import type { Patient, Billing } from "@/lib/types";
 import { getPatients, getBilling } from "@/lib/data";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Users, PlusCircle, IndianRupee } from "lucide-react";
+import { Users, PlusCircle, IndianRupee, QrCode } from "lucide-react";
 import {
   MagnifyingGlassIcon,
 } from "@/components/icons";
@@ -25,6 +25,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
+import { ScanToPay } from "@/components/scan-to-pay";
 
 const ToothIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -159,6 +160,7 @@ export default function Home() {
   const navItems = [
     { id: "patients", label: "Patients", icon: Users, onClick: () => setActiveView("patients") },
     { id: "billing", label: "Billing Info", icon: IndianRupee, onClick: () => setActiveView("billing") },
+    { id: "scan", label: "Scan to Pay", icon: QrCode, onClick: () => setActiveView("scan") },
   ];
 
   return (
@@ -228,8 +230,10 @@ export default function Home() {
                   />
                 </div>
               </>
-            ) : (
+            ) : activeView === 'billing' ? (
               <AllBilling patients={patients} billing={billing} />
+            ) : (
+              <ScanToPay />
             )}
           </div>
         </div>
