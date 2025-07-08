@@ -10,8 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['"PT Sans"', 'sans-serif'],
-        headline: ['"PT Sans"', 'sans-serif'],
+        body: ['Manrope', '"Noto Sans"', 'sans-serif'],
+        headline: ['Manrope', '"Noto Sans"', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {

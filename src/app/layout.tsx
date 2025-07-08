@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { PT_Sans } from "next/font/google";
+import { Manrope } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const ptSans = PT_Sans({
+const manrope = Manrope({
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["400", "500", "700", "800"],
   variable: "--font-sans",
 });
 
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: "DentalFlow",
   description: "Modern patient management for dentists",
   manifest: "/manifest.json",
-  themeColor: "#FFFFFF",
+  themeColor: "#111418",
 };
 
 export default function RootLayout({
@@ -23,19 +23,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Noto+Sans:wght@400;500;700;900&display=swap"
           rel="stylesheet"
         />
       </head>
       <body
         className={cn(
           "min-h-screen bg-background font-body antialiased",
-          ptSans.variable
+          manrope.variable
         )}
       >
         {children}

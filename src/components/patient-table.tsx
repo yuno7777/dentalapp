@@ -18,7 +18,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Edit, Trash2, Eye } from "lucide-react";
 import { format } from "date-fns";
-import { Badge } from "./ui/badge";
 
 type PatientTableProps = {
   patients: Patient[];
@@ -34,14 +33,13 @@ export function PatientTable({
   onView,
 }: PatientTableProps) {
   return (
-    <div className="rounded-lg border bg-card">
+    <div className="overflow-hidden rounded-lg border bg-background">
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead className="hidden md:table-cell">Email</TableHead>
-            <TableHead className="hidden sm:table-cell">Phone</TableHead>
-            <TableHead>Last Appointment</TableHead>
+          <TableRow className="bg-secondary hover:bg-secondary">
+            <TableHead className="text-foreground font-medium">Name</TableHead>
+            <TableHead className="text-foreground font-medium hidden md:table-cell">Email</TableHead>
+            <TableHead className="text-foreground font-medium">Last Visit</TableHead>
             <TableHead>
               <span className="sr-only">Actions</span>
             </TableHead>
@@ -50,18 +48,13 @@ export function PatientTable({
         <TableBody>
           {patients.length > 0 ? (
             patients.map((patient) => (
-              <TableRow key={patient.id}>
-                <TableCell className="font-medium">{patient.name}</TableCell>
+              <TableRow key={patient.id} className="border-border">
+                <TableCell className="font-medium text-foreground">{patient.name}</TableCell>
                 <TableCell className="hidden md:table-cell text-muted-foreground">
                   {patient.email}
                 </TableCell>
-                <TableCell className="hidden sm:table-cell text-muted-foreground">
-                  {patient.phone}
-                </TableCell>
-                <TableCell>
-                  <Badge variant="outline">
-                    {format(new Date(patient.lastAppointment), "PPP")}
-                  </Badge>
+                <TableCell className="text-muted-foreground">
+                  {format(new Date(patient.lastAppointment), "PPP")}
                 </TableCell>
                 <TableCell>
                   <DropdownMenu>
@@ -94,7 +87,7 @@ export function PatientTable({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={5} className="h-24 text-center">
+              <TableCell colSpan={4} className="h-24 text-center">
                 No patients found.
               </TableCell>
             </TableRow>
