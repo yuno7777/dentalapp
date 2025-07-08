@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import type { Patient, Billing } from "@/lib/types";
 import { getPatients, getBilling } from "@/lib/data";
 import { Input } from "@/components/ui/input";
@@ -27,8 +27,8 @@ import {
 import { cn } from "@/lib/utils";
 
 export default function Home() {
-  const [patients, setPatients] = useState<Patient[]>(getPatients());
-  const [billing, setBilling] = useState<Billing[]>(getBilling());
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [billing, setBilling] = useState<Billing[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
@@ -36,8 +36,36 @@ export default function Home() {
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [patientToDelete, setPatientToDelete] = useState<string | null>(null);
   const [activeNavItem, setActiveNavItem] = useState("patients");
+  const dataLoaded = useRef(false);
 
   const { toast } = useToast();
+
+  useEffect(() => {
+    try {
+      const storedPatients = localStorage.getItem("patients");
+      setPatients(storedPatients ? JSON.parse(storedPatients) : getPatients());
+
+      const storedBilling = localStorage.getItem("billing");
+      setBilling(storedBilling ? JSON.parse(storedBilling) : getBilling());
+    } catch (error) {
+      console.error("Could not load data from localStorage", error);
+      setPatients(getPatients());
+      setBilling(getBilling());
+    }
+    dataLoaded.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (dataLoaded.current) {
+      localStorage.setItem("patients", JSON.stringify(patients));
+    }
+  }, [patients]);
+
+  useEffect(() => {
+    if (dataLoaded.current) {
+      localStorage.setItem("billing", JSON.stringify(billing));
+    }
+  }, [billing]);
 
   const filteredPatients = useMemo(() => {
     return patients.filter((p) =>
