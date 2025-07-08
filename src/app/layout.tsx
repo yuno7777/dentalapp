@@ -12,7 +12,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "DentalFlow",
+  title: "Dr. Shailendra Satarkar",
   description: "Modern patient management for dentists",
   manifest: "/manifest.json",
   themeColor: "#ffffff",

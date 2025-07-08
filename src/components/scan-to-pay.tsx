@@ -34,7 +34,7 @@ export function ScanToPay() {
                 <CardContent className="flex flex-col items-center gap-4">
                     <div className="p-4 bg-white rounded-lg mt-2">
                         <Image
-                            src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=${upiId}&pn=DentalFlow`}
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=${upiId}&pn=Dr.%20Shailendra%20Satarkar`}
                             alt="Payment QR Code"
                             width={250}
                             height={250}

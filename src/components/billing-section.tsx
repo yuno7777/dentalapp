@@ -219,7 +219,7 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
                     <div className="flex justify-center items-center p-4 bg-white rounded-lg">
                         {paymentRecord && (
                             <Image
-                                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=abhisheksatarkar098@okaxis&pn=DentalFlow`}
+                                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=abhisheksatarkar098@okaxis&pn=Dr.%20Shailendra%20Satarkar`}
                                 alt="Payment QR Code"
                                 width={250}
                                 height={250}

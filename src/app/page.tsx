@@ -249,7 +249,7 @@ export default function Home() {
                 <div className="flex items-center gap-2 mb-1">
                   <ToothIcon className="h-7 w-7 text-primary" />
                   <h1 className="text-foreground text-xl font-bold">
-                    DentalFlow
+                    Dr. Shailendra Satarkar
                   </h1>
                 </div>
                 <p className="text-muted-foreground text-sm font-normal leading-normal">
@@ -281,13 +281,7 @@ export default function Home() {
 
           {/* Main Content */}
           <div className="flex-1 max-w-[960px] flex-col">
-            {activeView === 'dashboard' ? (
-              <DashboardView
-                patients={patients}
-                billing={billing}
-                appointments={appointments}
-              />
-            ) : activeView === 'patients' ? (
+            {activeView === 'patients' ? (
               <>
                 <div className="px-4 py-3 flex justify-between items-center gap-4">
                   <div className="relative flex-1">
@@ -314,6 +308,12 @@ export default function Home() {
                   />
                 </div>
               </>
+            ) : activeView === 'dashboard' ? (
+              <DashboardView
+                patients={patients}
+                billing={billing}
+                appointments={appointments}
+              />
             ) : activeView === 'appointments' ? (
               <AppointmentsView
                 appointments={appointments}
@@ -322,7 +322,11 @@ export default function Home() {
                 onEdit={handleEditAppointment}
                 onDelete={handlePromptDeleteAppointment}
                 selectedDate={selectedDate}
-                setSelectedDate={setSelectedDate}
+                setSelectedDate={(date) => {
+                  if (date instanceof Date) {
+                    setSelectedDate(date);
+                  }
+                }}
               />
             ) : activeView === 'billing' ? (
               <AllBilling patients={patients} billing={billing} />
