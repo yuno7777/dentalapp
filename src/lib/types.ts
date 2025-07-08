@@ -12,6 +12,7 @@ export type Billing = {
   patientId: string;
   service: string;
   cost: number;
+  paidAmount: number;
   status: 'Paid' | 'Unpaid' | 'Partially Paid';
   date: string;
 };

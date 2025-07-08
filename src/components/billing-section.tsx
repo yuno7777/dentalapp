@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
@@ -16,12 +16,11 @@ import { PlusCircle, Trash2, QrCode } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const billingFormSchema = z.object({
     service: z.string().min(3, "Service description is too short."),
     cost: z.coerce.number().positive("Cost must be a positive number."),
-    status: z.enum(["Paid", "Unpaid", "Partially Paid"]),
+    paidAmount: z.coerce.number().min(0, "Paid amount cannot be negative.").optional(),
 });
 
 type BillingSectionProps = {
@@ -39,19 +38,39 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
         defaultValues: {
             service: "",
             cost: 0,
-            status: "Unpaid",
+            paidAmount: 0,
         },
     });
 
+    useEffect(() => {
+        if (!isFormOpen) {
+            form.reset({ service: "", cost: 0, paidAmount: 0 });
+        }
+    }, [isFormOpen, form]);
+
     const handleAddBilling = (values: z.infer<typeof billingFormSchema>) => {
+        const paidAmount = values.paidAmount || 0;
+        const cost = values.cost;
+        let status: Billing['status'];
+
+        if (paidAmount >= cost) {
+            status = 'Paid';
+        } else if (paidAmount > 0) {
+            status = 'Partially Paid';
+        } else {
+            status = 'Unpaid';
+        }
+
         const newRecord: Billing = {
-            ...values,
             id: `b-${new Date().getTime()}`,
             patientId: patient.id,
             date: new Date().toISOString(),
+            service: values.service,
+            cost: cost,
+            paidAmount: paidAmount,
+            status: status,
         };
         onBillingUpdate([...billingRecords, newRecord]);
-        form.reset();
         setIsFormOpen(false);
     };
 
@@ -66,12 +85,11 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
     const handleMarkAsPaid = () => {
         if (!paymentRecord) return;
         
-        // This function can now handle single record updates
-        onBillingUpdate({ ...paymentRecord, status: 'Paid' });
+        onBillingUpdate({ ...paymentRecord, paidAmount: paymentRecord.cost, status: 'Paid' });
         
-        setPaymentRecord(null); // Close dialog
+        setPaymentRecord(null);
     };
-
+    
     const getStatusVariant = (status: Billing['status']): "default" | "secondary" | "destructive" => {
         switch (status) {
             case "Paid":
@@ -82,7 +100,6 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
                 return "destructive";
         }
     }
-
 
     return (
         <>
@@ -103,21 +120,27 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
                             <TableRow>
                                 <TableHead>Service</TableHead>
                                 <TableHead>Date</TableHead>
-                                <TableHead>Cost</TableHead>
+                                <TableHead>Total Cost</TableHead>
+                                <TableHead>Amount Paid</TableHead>
+                                <TableHead>Amount Due</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {billingRecords.length > 0 ? (
-                                billingRecords.map((record) => (
+                                billingRecords.map((record) => {
+                                    const amountDue = record.cost - record.paidAmount;
+                                    return (
                                     <TableRow key={record.id}>
                                         <TableCell className="font-medium">{record.service}</TableCell>
                                         <TableCell>{format(new Date(record.date), "PPP")}</TableCell>
                                         <TableCell>₹{record.cost.toFixed(2)}</TableCell>
+                                        <TableCell>₹{record.paidAmount.toFixed(2)}</TableCell>
+                                        <TableCell className={amountDue > 0 ? "text-destructive" : ""}>₹{amountDue.toFixed(2)}</TableCell>
                                         <TableCell><Badge variant={getStatusVariant(record.status)}>{record.status}</Badge></TableCell>
                                         <TableCell className="text-right">
-                                            {(record.status === 'Unpaid' || record.status === 'Partially Paid') && (
+                                            {amountDue > 0 && (
                                                 <Button variant="ghost" size="icon" onClick={() => handleShowQr(record)}>
                                                     <QrCode className="h-4 w-4" />
                                                     <span className="sr-only">Show Payment QR</span>
@@ -129,10 +152,11 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
                                             </Button>
                                         </TableCell>
                                     </TableRow>
-                                ))
+                                    )
+                                })
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="h-24 text-center">
+                                    <TableCell colSpan={7} className="h-24 text-center">
                                         No billing records found.
                                     </TableCell>
                                 </TableRow>
@@ -150,9 +174,9 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
                                 <DialogTitle>Add Billing Entry</DialogTitle>
                                 <DialogDescription>Record a new service or payment for {patient.name}.</DialogDescription>
                             </DialogHeader>
-                            <div className="py-6 space-y-4">
+                            <div className="py-6 grid grid-cols-2 gap-4">
                                 <FormField control={form.control} name="service" render={({ field }) => (
-                                    <FormItem>
+                                    <FormItem className="col-span-2">
                                         <FormLabel>Service Provided</FormLabel>
                                         <FormControl><Input placeholder="e.g., Routine Cleaning" {...field} /></FormControl>
                                         <FormMessage />
@@ -160,22 +184,15 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
                                 )} />
                                 <FormField control={form.control} name="cost" render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Cost (₹)</FormLabel>
+                                        <FormLabel>Total Cost (₹)</FormLabel>
                                         <FormControl><Input type="number" step="0.01" placeholder="150.00" {...field} /></FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )} />
-                                <FormField control={form.control} name="status" render={({ field }) => (
+                                <FormField control={form.control} name="paidAmount" render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Payment Status</FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                            <FormControl><SelectTrigger><SelectValue placeholder="Select status" /></SelectTrigger></FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="Paid">Paid</SelectItem>
-                                                <SelectItem value="Unpaid">Unpaid</SelectItem>
-                                                <SelectItem value="Partially Paid">Partially Paid</SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                        <FormLabel>Amount Paid (₹)</FormLabel>
+                                        <FormControl><Input type="number" step="0.01" placeholder="0.00" {...field} /></FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )} />
@@ -194,7 +211,7 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
                     <DialogHeader>
                         <DialogTitle>Scan to Pay</DialogTitle>
                         <DialogDescription>
-                           Please scan the QR code to pay. You will need to manually enter the amount: ₹{paymentRecord?.cost.toFixed(2)} for "{paymentRecord?.service}".
+                           Please scan the QR code to pay. You will need to manually enter the remaining amount: ₹{(paymentRecord?.cost ?? 0 - (paymentRecord?.paidAmount ?? 0)).toFixed(2)} for "{paymentRecord?.service}".
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex justify-center items-center p-4 bg-white rounded-lg">
@@ -209,7 +226,7 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
                     </div>
                     <DialogFooter className="sm:justify-between">
                         <Button variant="outline" onClick={() => setPaymentRecord(null)}>Cancel</Button>
-                        <Button onClick={handleMarkAsPaid}>Mark as Paid</Button>
+                        <Button onClick={handleMarkAsPaid}>Mark as Fully Paid</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

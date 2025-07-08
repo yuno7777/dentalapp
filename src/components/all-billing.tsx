@@ -32,9 +32,7 @@ export function AllBilling({ patients, billing }: AllBillingProps) {
     let paid = 0;
     filteredBilling.forEach(b => {
       billed += b.cost;
-      if (b.status === 'Paid') {
-        paid += b.cost;
-      }
+      paid += b.paidAmount;
     });
     return {
       totalBilled: billed,
@@ -115,24 +113,31 @@ export function AllBilling({ patients, billing }: AllBillingProps) {
                     <TableHead>Patient</TableHead>
                     <TableHead>Service</TableHead>
                     <TableHead>Date</TableHead>
-                    <TableHead>Cost</TableHead>
+                    <TableHead>Total Cost</TableHead>
+                    <TableHead>Amount Paid</TableHead>
+                    <TableHead>Amount Due</TableHead>
                     <TableHead>Status</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
               {sortedBilling.length > 0 ? (
-                sortedBilling.map((record) => (
+                sortedBilling.map((record) => {
+                  const amountDue = record.cost - record.paidAmount;
+                  return (
                     <TableRow key={record.id}>
                         <TableCell className="font-medium">{patientMap.get(record.patientId) || 'Unknown Patient'}</TableCell>
                         <TableCell>{record.service}</TableCell>
                         <TableCell>{format(new Date(record.date), "PPP")}</TableCell>
                         <TableCell>₹{record.cost.toFixed(2)}</TableCell>
+                        <TableCell>₹{record.paidAmount.toFixed(2)}</TableCell>
+                        <TableCell className={amountDue > 0 ? "text-destructive" : ""}>₹{amountDue.toFixed(2)}</TableCell>
                         <TableCell><Badge variant={getStatusVariant(record.status)}>{record.status}</Badge></TableCell>
                     </TableRow>
-                ))
+                  )
+                })
               ) : (
                 <TableRow>
-                    <TableCell colSpan={5} className="h-24 text-center">
+                    <TableCell colSpan={7} className="h-24 text-center">
                         No billing records found {date ? `for ${format(date, "PPP")}` : ""}.
                     </TableCell>
                 </TableRow>
