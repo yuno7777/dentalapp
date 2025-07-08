@@ -40,10 +40,10 @@ export function AppointmentsView({ appointments, patients, onAdd, onEdit, onDele
   }
 
   return (
-    <div className="p-4 grid md:grid-cols-3 gap-6">
-      <div className="md:col-span-1">
+    <div className="p-4 flex flex-col lg:flex-row gap-6">
+      <div className="lg:w-auto">
         <Card>
-          <CardContent className="p-0">
+          <CardContent className="p-0 flex justify-center">
              <Calendar
                 mode="single"
                 selected={selectedDate}
@@ -53,7 +53,7 @@ export function AppointmentsView({ appointments, patients, onAdd, onEdit, onDele
           </CardContent>
         </Card>
       </div>
-      <div className="md:col-span-2">
+      <div className="flex-1">
         <Card>
           <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
