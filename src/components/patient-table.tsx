@@ -47,7 +47,11 @@ export function PatientTable({
         <TableBody>
           {patients.length > 0 ? (
             patients.map((patient) => (
-              <TableRow key={patient.id} className="border-border">
+              <TableRow
+                key={patient.id}
+                className="border-border cursor-pointer"
+                onDoubleClick={() => onView(patient)}
+              >
                 <TableCell className="font-medium text-foreground">{patient.name}</TableCell>
                 <TableCell className="text-muted-foreground">
                   {format(new Date(patient.lastUpdated), "PPP")}
