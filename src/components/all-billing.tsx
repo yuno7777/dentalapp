@@ -9,6 +9,7 @@ import { format, isSameDay } from "date-fns";
 import { TrendingUp, TrendingDown, IndianRupee } from "lucide-react";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type AllBillingProps = {
   patients: Patient[];
@@ -130,7 +131,7 @@ export function AllBilling({ patients, billing }: AllBillingProps) {
                         <TableCell>{record.service}</TableCell>
                         <TableCell>{format(new Date(record.date), "PPP")}</TableCell>
                         <TableCell>₹{record.cost.toFixed(2)}</TableCell>
-                        <TableCell>₹{paidAmount.toFixed(2)}</TableCell>
+                        <TableCell className={cn(paidAmount > 0 && "text-success")}>₹{paidAmount.toFixed(2)}</TableCell>
                         <TableCell className={amountDue > 0 ? "text-destructive" : ""}>₹{amountDue.toFixed(2)}</TableCell>
                         <TableCell><Badge variant={getStatusVariant(record.status)}>{record.status}</Badge></TableCell>
                     </TableRow>

@@ -16,6 +16,7 @@ import { PlusCircle, Trash2, QrCode } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 const billingFormSchema = z.object({
     service: z.string().min(3, "Service description is too short."),
@@ -137,7 +138,7 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
                                         <TableCell className="font-medium">{record.service}</TableCell>
                                         <TableCell>{format(new Date(record.date), "PPP")}</TableCell>
                                         <TableCell>₹{record.cost.toFixed(2)}</TableCell>
-                                        <TableCell>₹{paidAmount.toFixed(2)}</TableCell>
+                                        <TableCell className={cn(paidAmount > 0 && "text-success")}>₹{paidAmount.toFixed(2)}</TableCell>
                                         <TableCell className={amountDue > 0 ? "text-destructive" : ""}>₹{amountDue.toFixed(2)}</TableCell>
                                         <TableCell><Badge variant={getStatusVariant(record.status)}>{record.status}</Badge></TableCell>
                                         <TableCell className="text-right">
