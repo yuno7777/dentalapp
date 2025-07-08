@@ -13,6 +13,8 @@ const ptSans = PT_Sans({
 export const metadata: Metadata = {
   title: "DentalFlow",
   description: "Modern patient management for dentists",
+  manifest: "/manifest.json",
+  themeColor: "#FFFFFF",
 };
 
 export default function RootLayout({
