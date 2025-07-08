@@ -4,9 +4,10 @@ import { useState, useMemo } from "react";
 import type { Patient, Billing } from "@/lib/types";
 import { getPatients, getBilling } from "@/lib/data";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Users, PlusCircle } from "lucide-react";
 import {
   MagnifyingGlassIcon,
-  PlusSquareIcon,
   PencilSimpleIcon,
   TrashIcon,
   CurrencyCircleDollarIcon,
@@ -36,7 +37,7 @@ export default function Home() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [patientToDelete, setPatientToDelete] = useState<string | null>(null);
-  const [activeNavItem, setActiveNavItem] = useState("add");
+  const [activeNavItem, setActiveNavItem] = useState("patients");
 
   const { toast } = useToast();
 
@@ -49,7 +50,6 @@ export default function Home() {
   const handleAddNew = () => {
     setSelectedPatient(null);
     setIsFormOpen(true);
-    setActiveNavItem("add");
   };
 
   const handleEdit = (patient: Patient) => {
@@ -112,7 +112,7 @@ export default function Home() {
   }, [selectedPatient, billing]);
 
   const navItems = [
-    { id: "add", label: "Add Patient", icon: PlusSquareIcon, onClick: handleAddNew },
+    { id: "patients", label: "Patients", icon: Users, onClick: () => setActiveNavItem("patients") },
     { id: "edit", label: "Edit Patient", icon: PencilSimpleIcon },
     { id: "delete", label: "Delete Patient", icon: TrashIcon },
     { id: "billing", label: "Billing Info", icon: CurrencyCircleDollarIcon },
@@ -155,9 +155,9 @@ export default function Home() {
 
           {/* Main Content */}
           <div className="flex-1 max-w-[960px] flex-col">
-            <div className="px-4 py-3">
-              <div className="relative flex w-full items-center">
-                <MagnifyingGlassIcon className="absolute left-4 h-6 w-6 text-muted-foreground" />
+            <div className="px-4 py-3 flex justify-between items-center gap-4">
+              <div className="relative flex-1">
+                <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-muted-foreground" />
                 <Input
                   type="search"
                   placeholder="Search patients"
@@ -166,6 +166,10 @@ export default function Home() {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
+              <Button onClick={handleAddNew}>
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add Patient
+              </Button>
             </div>
             <div className="p-4">
               <PatientTable
