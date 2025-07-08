@@ -2,7 +2,6 @@ export type Patient = {
   id: string;
   name: string;
   phone: string;
-  email: string;
   medicalHistory: string;
   lastAppointment: string; 
 };

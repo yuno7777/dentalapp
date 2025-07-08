@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Calendar, Stethoscope, User, Phone, Mail } from "lucide-react";
+import { Calendar, Stethoscope, User, Phone } from "lucide-react";
 import { BillingSection } from "./billing-section";
 
 type PatientDetailsProps = {
@@ -54,10 +54,6 @@ export function PatientDetails({
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4 text-sm">
-                <div className="flex items-center">
-                  <Mail className="w-4 h-4 mr-3 text-muted-foreground" />
-                  <span>{patient.email}</span>
-                </div>
                 <div className="flex items-center">
                   <Phone className="w-4 h-4 mr-3 text-muted-foreground" />
                   <span>{patient.phone}</span>

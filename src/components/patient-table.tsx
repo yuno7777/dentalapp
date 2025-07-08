@@ -38,7 +38,6 @@ export function PatientTable({
         <TableHeader>
           <TableRow className="bg-secondary hover:bg-secondary">
             <TableHead className="text-foreground font-medium">Name</TableHead>
-            <TableHead className="text-foreground font-medium hidden md:table-cell">Email</TableHead>
             <TableHead className="text-foreground font-medium">Last Visit</TableHead>
             <TableHead>
               <span className="sr-only">Actions</span>
@@ -50,9 +49,6 @@ export function PatientTable({
             patients.map((patient) => (
               <TableRow key={patient.id} className="border-border">
                 <TableCell className="font-medium text-foreground">{patient.name}</TableCell>
-                <TableCell className="hidden md:table-cell text-muted-foreground">
-                  {patient.email}
-                </TableCell>
                 <TableCell className="text-muted-foreground">
                   {format(new Date(patient.lastAppointment), "PPP")}
                 </TableCell>
@@ -87,7 +83,7 @@ export function PatientTable({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={4} className="h-24 text-center">
+              <TableCell colSpan={3} className="h-24 text-center">
                 No patients found.
               </TableCell>
             </TableRow>

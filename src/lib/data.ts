@@ -4,7 +4,6 @@ const patients: Patient[] = [
   {
     id: '1',
     name: 'Alice Johnson',
-    email: 'alice.j@example.com',
     phone: '555-0101',
     medicalHistory: 'No known allergies. History of seasonal asthma.',
     lastAppointment: '2024-05-20T10:00:00Z',
@@ -12,7 +11,6 @@ const patients: Patient[] = [
   {
     id: '2',
     name: 'Bob Williams',
-    email: 'bob.w@example.com',
     phone: '555-0102',
     medicalHistory: 'Allergic to penicillin.',
     lastAppointment: '2024-05-18T14:30:00Z',
@@ -20,7 +18,6 @@ const patients: Patient[] = [
   {
     id: '3',
     name: 'Charlie Brown',
-    email: 'charlie.b@example.com',
     phone: '555-0103',
     medicalHistory: 'None.',
     lastAppointment: '2024-04-30T09:00:00Z',
@@ -28,7 +25,6 @@ const patients: Patient[] = [
   {
     id: '4',
     name: 'Diana Miller',
-    email: 'diana.m@example.com',
     phone: '555-0104',
     medicalHistory: 'History of migraines. Sensitive to bright lights.',
     lastAppointment: '2024-06-01T11:00:00Z',
@@ -36,7 +32,6 @@ const patients: Patient[] = [
   {
     id: '5',
     name: 'Ethan Davis',
-    email: 'ethan.d@example.com',
     phone: '555-0105',
     medicalHistory: 'Lactose intolerant.',
     lastAppointment: '2024-06-05T16:00:00Z',

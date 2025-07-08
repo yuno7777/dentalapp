@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -29,7 +30,6 @@ import {
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
-  email: z.string().email("Invalid email address."),
   phone: z.string().min(10, "Phone number seems too short."),
   medicalHistory: z.string().optional(),
   lastAppointment: z.date({ required_error: "An appointment date is required." }),
@@ -51,13 +51,23 @@ export function PatientForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: patient?.name || "",
-      email: patient?.email || "",
-      phone: patient?.phone || "",
-      medicalHistory: patient?.medicalHistory || "",
-      lastAppointment: patient ? new Date(patient.lastAppointment) : undefined,
+      name: "",
+      phone: "",
+      medicalHistory: "",
+      lastAppointment: undefined,
     },
   });
+
+  useEffect(() => {
+    if (isOpen) {
+      form.reset({
+        name: patient?.name || "",
+        phone: patient?.phone || "",
+        medicalHistory: patient?.medicalHistory || "",
+        lastAppointment: patient ? new Date(patient.lastAppointment) : undefined,
+      });
+    }
+  }, [isOpen, patient, form]);
 
   const handleFormSubmit = (values: z.infer<typeof formSchema>) => {
     onSubmit({
@@ -98,19 +108,6 @@ export function PatientForm({
                     <FormLabel>Full Name</FormLabel>
                     <FormControl>
                       <Input placeholder="John Doe" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email Address</FormLabel>
-                    <FormControl>
-                      <Input placeholder="john.doe@example.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
