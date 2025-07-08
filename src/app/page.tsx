@@ -8,8 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Users, PlusCircle } from "lucide-react";
 import {
   MagnifyingGlassIcon,
-  PencilSimpleIcon,
-  TrashIcon,
   CurrencyCircleDollarIcon,
 } from "@/components/icons";
 import { PatientTable } from "@/components/patient-table";
@@ -113,8 +111,6 @@ export default function Home() {
 
   const navItems = [
     { id: "patients", label: "Patients", icon: Users, onClick: () => setActiveNavItem("patients") },
-    { id: "edit", label: "Edit Patient", icon: PencilSimpleIcon },
-    { id: "delete", label: "Delete Patient", icon: TrashIcon },
     { id: "billing", label: "Billing Info", icon: CurrencyCircleDollarIcon },
   ];
 
