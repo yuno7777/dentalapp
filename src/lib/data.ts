@@ -7,6 +7,7 @@ const patients: Patient[] = [
     phone: '555-0101',
     medicalHistory: 'No known allergies. History of seasonal asthma.',
     lastUpdated: '2024-05-20T10:00:00Z',
+    treatment: 'Standard cleaning and check-up.',
   },
   {
     id: '2',
@@ -14,6 +15,7 @@ const patients: Patient[] = [
     phone: '555-0102',
     medicalHistory: 'Allergic to penicillin.',
     lastUpdated: '2024-05-18T14:30:00Z',
+    treatment: 'Follow-up for wisdom tooth extraction.',
   },
   {
     id: '3',
@@ -21,6 +23,7 @@ const patients: Patient[] = [
     phone: '555-0103',
     medicalHistory: 'None.',
     lastUpdated: '2024-04-30T09:00:00Z',
+    treatment: 'Awaiting consultation for braces.',
   },
   {
     id: '4',
@@ -28,6 +31,7 @@ const patients: Patient[] = [
     phone: '555-0104',
     medicalHistory: 'History of migraines. Sensitive to bright lights.',
     lastUpdated: '2024-06-01T11:00:00Z',
+    treatment: 'Post-whitening sensitivity check.',
   },
   {
     id: '5',
@@ -35,6 +39,7 @@ const patients: Patient[] = [
     phone: '555-0105',
     medicalHistory: 'Lactose intolerant.',
     lastUpdated: '2024-06-05T16:00:00Z',
+    treatment: 'None.',
   },
 ];
 

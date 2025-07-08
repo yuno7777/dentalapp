@@ -31,6 +31,7 @@ const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
   phone: z.string().min(10, "Phone number seems too short."),
   medicalHistory: z.string().optional(),
+  treatment: z.string().optional(),
 });
 
 type PatientFormProps = {
@@ -52,6 +53,7 @@ export function PatientForm({
       name: "",
       phone: "",
       medicalHistory: "",
+      treatment: "",
     },
   });
 
@@ -61,6 +63,7 @@ export function PatientForm({
         name: patient?.name || "",
         phone: patient?.phone || "",
         medicalHistory: patient?.medicalHistory || "",
+        treatment: patient?.treatment || "",
       });
     }
   }, [isOpen, patient, form]);
@@ -70,6 +73,7 @@ export function PatientForm({
       ...values,
       id: patient?.id || new Date().toISOString(),
       medicalHistory: values.medicalHistory || "None.",
+      treatment: values.treatment || "No active treatment.",
       lastUpdated: new Date().toISOString(),
     });
     form.reset();
@@ -131,6 +135,23 @@ export function PatientForm({
                     <FormControl>
                       <Textarea
                         placeholder="Allergies, chronic conditions, etc."
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <FormField
+                control={form.control}
+                name="treatment"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Treatment Plan</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="e.g., Root canal, routine check-up, etc."
                         className="resize-none"
                         {...field}
                       />

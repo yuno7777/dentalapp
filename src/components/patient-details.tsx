@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Calendar, Stethoscope, User, Phone } from "lucide-react";
+import { Calendar, Stethoscope, User, Phone, ClipboardList } from "lucide-react";
 import { BillingSection } from "./billing-section";
 
 type PatientDetailsProps = {
@@ -79,6 +79,19 @@ export function PatientDetails({
               </CardContent>
             </Card>
           </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ClipboardList className="w-5 h-5" />
+                <span>Treatment Plan</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground">
+              <p>{patient.treatment || 'No active treatment specified.'}</p>
+            </CardContent>
+          </Card>
+
           <BillingSection
             patient={patient}
             billingRecords={billingRecords}
