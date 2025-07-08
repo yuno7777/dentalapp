@@ -53,7 +53,7 @@ export default function Home() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [patientToDelete, setPatientToDelete] = useState<string | null>(null);
-  const [activeView, setActiveView] = useState("dashboard");
+  const [activeView, setActiveView] = useState("patients");
   const [isAppointmentFormOpen, setIsAppointmentFormOpen] = useState(false);
   const [appointmentToEdit, setAppointmentToEdit] = useState<Appointment | null>(null);
   const [appointmentToDelete, setAppointmentToDelete] = useState<string | null>(null);
@@ -230,8 +230,8 @@ export default function Home() {
   }, [selectedPatient, billing]);
 
   const navItems = [
-    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, onClick: () => setActiveView("dashboard") },
     { id: "patients", label: "Patients", icon: Users, onClick: () => setActiveView("patients") },
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, onClick: () => setActiveView("dashboard") },
     { id: "appointments", label: "Appointments", icon: CalendarDays, onClick: () => setActiveView("appointments") },
     { id: "billing", label: "Billing Info", icon: IndianRupee, onClick: () => setActiveView("billing") },
     { id: "scan", label: "Scan to Pay", icon: QrCode, onClick: () => setActiveView("scan") },
