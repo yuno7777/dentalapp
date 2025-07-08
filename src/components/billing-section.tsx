@@ -130,13 +130,14 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
                         <TableBody>
                             {billingRecords.length > 0 ? (
                                 billingRecords.map((record) => {
-                                    const amountDue = record.cost - record.paidAmount;
+                                    const paidAmount = record.paidAmount ?? 0;
+                                    const amountDue = record.cost - paidAmount;
                                     return (
                                     <TableRow key={record.id}>
                                         <TableCell className="font-medium">{record.service}</TableCell>
                                         <TableCell>{format(new Date(record.date), "PPP")}</TableCell>
                                         <TableCell>₹{record.cost.toFixed(2)}</TableCell>
-                                        <TableCell>₹{record.paidAmount.toFixed(2)}</TableCell>
+                                        <TableCell>₹{paidAmount.toFixed(2)}</TableCell>
                                         <TableCell className={amountDue > 0 ? "text-destructive" : ""}>₹{amountDue.toFixed(2)}</TableCell>
                                         <TableCell><Badge variant={getStatusVariant(record.status)}>{record.status}</Badge></TableCell>
                                         <TableCell className="text-right">
