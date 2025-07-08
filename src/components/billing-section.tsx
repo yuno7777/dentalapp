@@ -11,11 +11,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Trash2, CheckCircle2 } from "lucide-react";
+import { PlusCircle, Trash2, CheckCircle2, QrCode } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { ScanToPayDialog } from "./scan-to-pay-dialog";
 
 const billingFormSchema = z.object({
     service: z.string().min(3, "Service description is too short."),
@@ -31,6 +32,8 @@ type BillingSectionProps = {
 
 export function BillingSection({ patient, billingRecords, onBillingUpdate }: BillingSectionProps) {
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const [isQrOpen, setIsQrOpen] = useState(false);
+    const [selectedRecordForQr, setSelectedRecordForQr] = useState<Billing | null>(null);
 
     const form = useForm<z.infer<typeof billingFormSchema>>({
         resolver: zodResolver(billingFormSchema),
@@ -79,6 +82,11 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
     
     const handleMarkAsPaid = (recordToUpdate: Billing) => {
         onBillingUpdate({ ...recordToUpdate, paidAmount: recordToUpdate.cost, status: 'Paid' });
+    };
+
+    const handleShowQrCode = (record: Billing) => {
+        setSelectedRecordForQr(record);
+        setIsQrOpen(true);
     };
     
     const getStatusVariant = (status: Billing['status']): "default" | "secondary" | "destructive" => {
@@ -133,12 +141,18 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
                                         <TableCell><Badge variant={getStatusVariant(record.status)}>{record.status}</Badge></TableCell>
                                         <TableCell className="text-right">
                                             {amountDue > 0 && (
-                                                <Button variant="ghost" size="icon" onClick={() => handleMarkAsPaid(record)}>
-                                                    <CheckCircle2 className="h-4 w-4 text-success" />
-                                                    <span className="sr-only">Mark as Fully Paid</span>
-                                                </Button>
+                                                <>
+                                                    <Button variant="ghost" size="icon" onClick={() => handleShowQrCode(record)} title="Show QR Code">
+                                                        <QrCode className="h-4 w-4" />
+                                                        <span className="sr-only">Show QR Code</span>
+                                                    </Button>
+                                                    <Button variant="ghost" size="icon" onClick={() => handleMarkAsPaid(record)} title="Mark as Paid">
+                                                        <CheckCircle2 className="h-4 w-4 text-success" />
+                                                        <span className="sr-only">Mark as Fully Paid</span>
+                                                    </Button>
+                                                </>
                                             )}
-                                            <Button variant="ghost" size="icon" onClick={() => handleDeleteBilling(record.id)}>
+                                            <Button variant="ghost" size="icon" onClick={() => handleDeleteBilling(record.id)} title="Delete Entry">
                                                 <Trash2 className="h-4 w-4 text-destructive" />
                                                 <span className="sr-only">Delete billing entry</span>
                                             </Button>
@@ -157,6 +171,25 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
                     </Table>
                 </CardContent>
             </Card>
+
+            <Dialog open={isQrOpen} onOpenChange={setIsQrOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Scan to Pay</DialogTitle>
+                        <DialogDescription>
+                            Scan this QR code with any UPI app to pay the outstanding amount of 
+                            <span className="font-bold text-foreground"> ₹{selectedRecordForQr ? (selectedRecordForQr.cost - (selectedRecordForQr.paidAmount ?? 0)).toFixed(2) : '0.00'}</span> for {patient.name}.
+                        </DialogDescription>
+                    </DialogHeader>
+                    {selectedRecordForQr && (
+                         <ScanToPayDialog 
+                            amount={(selectedRecordForQr.cost - (selectedRecordForQr.paidAmount ?? 0))}
+                            payeeName="Shailendra Satarkar" 
+                            upiId="satarkarsd@oksbi"
+                        />
+                    )}
+                </DialogContent>
+            </Dialog>
 
             <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
                 <DialogContent>

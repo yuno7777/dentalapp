@@ -6,7 +6,7 @@ import type { Patient, Billing, Appointment } from "@/lib/types";
 import { getPatients, getBilling, getAppointments } from "@/lib/data";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Users, PlusCircle, IndianRupee, CalendarDays } from "lucide-react";
+import { LayoutDashboard, Users, PlusCircle, IndianRupee, CalendarDays, QrCode } from "lucide-react";
 import {
   MagnifyingGlassIcon,
 } from "@/components/icons";
@@ -30,6 +30,7 @@ import {
 import { cn } from "@/lib/utils";
 import { DashboardView } from "@/components/dashboard-view";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { ScanToPay } from "@/components/scan-to-pay";
 
 export default function Home() {
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -206,6 +207,7 @@ export default function Home() {
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, onClick: () => setActiveView("dashboard") },
     { id: "appointments", label: "Appointments", icon: CalendarDays, onClick: () => setActiveView("appointments") },
     { id: "billing", label: "Billing Info", icon: IndianRupee, onClick: () => setActiveView("billing") },
+    { id: "scan-to-pay", label: "Scan to Pay", icon: QrCode, onClick: () => setActiveView("scan-to-pay") },
   ];
 
   return (
@@ -315,6 +317,8 @@ export default function Home() {
               />
             ) : activeView === 'billing' ? (
               <AllBilling patients={patients} billing={billing} />
+            ) : activeView === 'scan-to-pay' ? (
+              <ScanToPay />
             ) : null}
           </div>
         </div>
