@@ -1,12 +1,14 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import type { Billing, Patient } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
-import { useMemo } from "react";
+import { format, isSameDay } from "date-fns";
 import { TrendingUp, TrendingDown, IndianRupee } from "lucide-react";
+import { DatePicker } from "@/components/ui/date-picker";
+import { Button } from "@/components/ui/button";
 
 type AllBillingProps = {
   patients: Patient[];
@@ -14,27 +16,32 @@ type AllBillingProps = {
 };
 
 export function AllBilling({ patients, billing }: AllBillingProps) {
+  const [date, setDate] = useState<Date | undefined>(new Date());
+
   const patientMap = useMemo(() => {
     return new Map(patients.map((p) => [p.id, p.name]));
   }, [patients]);
 
+  const filteredBilling = useMemo(() => {
+    if (!date) return billing;
+    return billing.filter(b => isSameDay(new Date(b.date), date));
+  }, [billing, date]);
+
   const { totalBilled, totalPaid, totalDue } = useMemo(() => {
     let billed = 0;
     let paid = 0;
-    billing.forEach(b => {
+    filteredBilling.forEach(b => {
       billed += b.cost;
       if (b.status === 'Paid') {
         paid += b.cost;
       }
     });
-    // For simplicity, we calculate 'due' as total minus paid.
-    // A more complex system might handle partial payments differently.
     return {
       totalBilled: billed,
       totalPaid: paid,
       totalDue: billed - paid,
     };
-  }, [billing]);
+  }, [filteredBilling]);
 
   const getStatusVariant = (status: Billing['status']): "default" | "secondary" | "destructive" => {
     switch (status) {
@@ -48,11 +55,20 @@ export function AllBilling({ patients, billing }: AllBillingProps) {
   }
 
   const sortedBilling = useMemo(() => {
-    return [...billing].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  }, [billing]);
+    return [...filteredBilling].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }, [filteredBilling]);
 
   return (
     <div className="p-4 space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+        <h2 className="text-2xl font-bold tracking-tight">
+            {date ? `Summary for ${format(date, "PPP")}` : "All-Time Summary"}
+        </h2>
+        <div className="flex items-center gap-2">
+          <DatePicker date={date} setDate={setDate} />
+          {date && <Button variant="outline" onClick={() => setDate(undefined)}>View All Time</Button>}
+        </div>
+      </div>
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -61,7 +77,7 @@ export function AllBilling({ patients, billing }: AllBillingProps) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">₹{totalBilled.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">Total amount invoiced to patients</p>
+            <p className="text-xs text-muted-foreground">Total amount invoiced</p>
           </CardContent>
         </Card>
         <Card>
@@ -87,8 +103,10 @@ export function AllBilling({ patients, billing }: AllBillingProps) {
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>All Billing Records</CardTitle>
-          <CardDescription>A complete history of all financial transactions.</CardDescription>
+          <CardTitle>Billing Records</CardTitle>
+          <CardDescription>
+            {date ? `Transactions for ${format(date, "PPP")}` : "A complete history of all financial transactions."}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -115,7 +133,7 @@ export function AllBilling({ patients, billing }: AllBillingProps) {
               ) : (
                 <TableRow>
                     <TableCell colSpan={5} className="h-24 text-center">
-                        No billing records found.
+                        No billing records found {date ? `for ${format(date, "PPP")}` : ""}.
                     </TableCell>
                 </TableRow>
               )}
