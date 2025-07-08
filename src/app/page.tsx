@@ -57,6 +57,7 @@ export default function Home() {
   const [appointmentToEdit, setAppointmentToEdit] = useState<Appointment | null>(null);
   const [appointmentToDelete, setAppointmentToDelete] = useState<string | null>(null);
   const [isAppointmentAlertOpen, setIsAppointmentAlertOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const dataLoaded = useRef(false);
 
   const { toast } = useToast();
@@ -308,6 +309,8 @@ export default function Home() {
                 onAdd={handleAddNewAppointment}
                 onEdit={handleEditAppointment}
                 onDelete={handlePromptDeleteAppointment}
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
               />
             ) : activeView === 'billing' ? (
               <AllBilling patients={patients} billing={billing} />
@@ -331,6 +334,7 @@ export default function Home() {
         patients={patients}
         appointment={appointmentToEdit}
         onSubmit={handleAppointmentFormSubmit}
+        selectedDate={selectedDate}
       />
 
       <PatientDetails

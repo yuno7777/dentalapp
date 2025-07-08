@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import type { Appointment, Patient } from "@/lib/types";
 import { format, isSameDay } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
@@ -15,11 +15,11 @@ type AppointmentsViewProps = {
   onAdd: () => void;
   onEdit: (appointment: Appointment) => void;
   onDelete: (appointmentId: string) => void;
+  selectedDate: Date | undefined;
+  setSelectedDate: (date: Date | undefined) => void;
 };
 
-export function AppointmentsView({ appointments, patients, onAdd, onEdit, onDelete }: AppointmentsViewProps) {
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-
+export function AppointmentsView({ appointments, patients, onAdd, onEdit, onDelete, selectedDate, setSelectedDate }: AppointmentsViewProps) {
   const patientMap = useMemo(() => {
     return new Map(patients.map((p) => [p.id, p.name]));
   }, [patients]);

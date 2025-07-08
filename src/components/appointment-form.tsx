@@ -48,6 +48,7 @@ type AppointmentFormProps = {
   patients: Patient[];
   appointment?: Appointment | null;
   onSubmit: (values: Appointment) => void;
+  selectedDate?: Date;
 };
 
 export function AppointmentForm({
@@ -56,6 +57,7 @@ export function AppointmentForm({
   patients,
   appointment,
   onSubmit,
+  selectedDate,
 }: AppointmentFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -68,23 +70,20 @@ export function AppointmentForm({
   });
 
   useEffect(() => {
-    // This effect only runs when the sheet is opened or the appointment to edit changes.
-    // It resets the form with the correct default values.
     if (isOpen) {
       const now = new Date();
-      // Format time as HH:MM for the input default
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const currentTime = `${hours}:${minutes}`;
 
       form.reset({
         patientId: appointment?.patientId || "",
-        date: appointment ? new Date(appointment.date) : new Date(),
+        date: appointment ? new Date(appointment.date) : selectedDate || new Date(),
         time: appointment?.time || currentTime,
         reason: appointment?.reason || "",
       });
     }
-  }, [isOpen, appointment]);
+  }, [isOpen, appointment, selectedDate, form]);
 
   const handleFormSubmit = (values: z.infer<typeof formSchema>) => {
     onSubmit({
@@ -140,17 +139,19 @@ export function AppointmentForm({
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="date"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Date</FormLabel>
-                    <DatePicker date={field.value} setDate={(date) => field.onChange(date)} />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {appointment && (
+                <FormField
+                  control={form.control}
+                  name="date"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Date</FormLabel>
+                      <DatePicker date={field.value} setDate={field.onChange} />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
               <FormField
                 control={form.control}
                 name="time"
