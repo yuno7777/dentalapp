@@ -26,6 +26,19 @@ import {
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
 
+const ToothIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    {...props}
+  >
+    <path d="M20.3,8.73A4.2,4.2,0,0,0,17.42,4a4.08,4.08,0,0,0-4.05,4.09,1.74,1.74,0,0,1-1,1.5,1.81,1.81,0,0,1-1.76,0,1.74,1.74,0,0,1-1-1.5A4.08,4.08,0,0,0,5.58,4a4.2,4.2,0,0,0-2.88,4.73,8.44,8.44,0,0,0,2.1,5.55,8.81,8.81,0,0,0,2.83,3.14,1,1,0,0,0,1,0,9.25,9.25,0,0,0,2.94-2.28,1,1,0,0,1,1.7,0A9.25,9.25,0,0,0,16.23,17.42a1,1,0,0,0,1,0,8.81,8.81,0,0,0,2.83-3.14A8.44,8.44,0,0,0,20.3,8.73Z" />
+  </svg>
+);
+
 export default function Home() {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [billing, setBilling] = useState<Billing[]>([]);
@@ -150,9 +163,12 @@ export default function Home() {
           <aside className="w-80 p-4">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col">
-                <h1 className="text-foreground text-base font-medium leading-normal">
-                  Dental App
-                </h1>
+                <div className="flex items-center gap-2 mb-1">
+                  <ToothIcon className="h-7 w-7 text-primary" />
+                  <h1 className="text-foreground text-xl font-bold">
+                    DentalFlow
+                  </h1>
+                </div>
                 <p className="text-muted-foreground text-sm font-normal leading-normal">
                   Manage your patients and billing efficiently
                 </p>
