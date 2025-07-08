@@ -219,7 +219,6 @@ export default function Home() {
             <div>
               <div className="flex flex-col mb-4">
                 <div className="flex items-center gap-2 mb-1">
-                  <Image src="/logo.png" alt="Dr. Shailendra Satarkar Logo" width={28} height={28} />
                   <h1 className="text-foreground text-xl font-bold">
                     Dr. Shailendra Satarkar
                   </h1>
