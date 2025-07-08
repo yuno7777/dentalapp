@@ -1,4 +1,4 @@
-import type { Patient, Billing } from './types';
+import type { Patient, Billing, Appointment } from './types';
 
 const patients: Patient[] = [
   {
@@ -91,5 +91,34 @@ const billing: Billing[] = [
   },
 ];
 
+const today = new Date();
+const tomorrow = new Date(today);
+tomorrow.setDate(tomorrow.getDate() + 1);
+
+const appointments: Appointment[] = [
+  {
+    id: 'appt-1',
+    patientId: '1',
+    date: today.toISOString(),
+    time: '10:00',
+    reason: 'Annual Check-up & Cleaning',
+  },
+  {
+    id: 'appt-2',
+    patientId: '2',
+    date: today.toISOString(),
+    time: '11:30',
+    reason: 'Follow-up for wisdom tooth extraction.',
+  },
+  {
+    id: 'appt-3',
+    patientId: '4',
+    date: tomorrow.toISOString(),
+    time: '14:00',
+    reason: 'Consultation for whitening sensitivity.',
+  },
+];
+
 export const getPatients = () => patients;
 export const getBilling = () => billing;
+export const getAppointments = () => appointments;

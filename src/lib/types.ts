@@ -16,3 +16,11 @@ export type Billing = {
   status: 'Paid' | 'Unpaid' | 'Partially Paid';
   date: string;
 };
+
+export type Appointment = {
+  id: string;
+  patientId: string;
+  date: string; // ISO string
+  time: string; // e.g., "10:30"
+  reason: string;
+};

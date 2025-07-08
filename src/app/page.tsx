@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef } from "react";
-import type { Patient, Billing } from "@/lib/types";
-import { getPatients, getBilling } from "@/lib/data";
+import type { Patient, Billing, Appointment } from "@/lib/types";
+import { getPatients, getBilling, getAppointments } from "@/lib/data";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Users, PlusCircle, IndianRupee, QrCode } from "lucide-react";
+import { Users, PlusCircle, IndianRupee, QrCode, CalendarDays } from "lucide-react";
 import {
   MagnifyingGlassIcon,
 } from "@/components/icons";
@@ -13,6 +13,8 @@ import { PatientTable } from "@/components/patient-table";
 import { PatientForm } from "@/components/patient-form";
 import { PatientDetails } from "@/components/patient-details";
 import { AllBilling } from "@/components/all-billing";
+import { AppointmentsView } from "@/components/appointments-view";
+import { AppointmentForm } from "@/components/appointment-form";
 import { useToast } from "@/hooks/use-toast";
 import {
   AlertDialog,
@@ -43,6 +45,7 @@ const ToothIcon = (props: React.SVGProps<SVGSVGElement>) => (
 export default function Home() {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [billing, setBilling] = useState<Billing[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
@@ -50,6 +53,10 @@ export default function Home() {
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [patientToDelete, setPatientToDelete] = useState<string | null>(null);
   const [activeView, setActiveView] = useState("patients");
+  const [isAppointmentFormOpen, setIsAppointmentFormOpen] = useState(false);
+  const [appointmentToEdit, setAppointmentToEdit] = useState<Appointment | null>(null);
+  const [appointmentToDelete, setAppointmentToDelete] = useState<string | null>(null);
+  const [isAppointmentAlertOpen, setIsAppointmentAlertOpen] = useState(false);
   const dataLoaded = useRef(false);
 
   const { toast } = useToast();
@@ -61,10 +68,15 @@ export default function Home() {
 
       const storedBilling = localStorage.getItem("billing");
       setBilling(storedBilling ? JSON.parse(storedBilling) : getBilling());
+      
+      const storedAppointments = localStorage.getItem("appointments");
+      setAppointments(storedAppointments ? JSON.parse(storedAppointments) : getAppointments());
+
     } catch (error) {
       console.error("Could not load data from localStorage", error);
       setPatients(getPatients());
       setBilling(getBilling());
+      setAppointments(getAppointments());
     }
     dataLoaded.current = true;
   }, []);
@@ -80,6 +92,12 @@ export default function Home() {
       localStorage.setItem("billing", JSON.stringify(billing));
     }
   }, [billing]);
+
+  useEffect(() => {
+    if (dataLoaded.current) {
+      localStorage.setItem("appointments", JSON.stringify(appointments));
+    }
+  }, [appointments]);
 
   const filteredPatients = useMemo(() => {
     return patients.filter((p) =>
@@ -141,14 +159,11 @@ export default function Home() {
   const handleBillingUpdate = (updatedBillingForPatient: Billing[] | Billing) => {
     if (Array.isArray(updatedBillingForPatient)) {
       if (!selectedPatient) return;
-      // This logic handles adding or deleting billing entries for a specific patient.
-      // It replaces all billing records for the selected patient with the new, updated list.
       const otherPatientsBilling = billing.filter(
         (b) => b.patientId !== selectedPatient.id
       );
       setBilling([...otherPatientsBilling, ...updatedBillingForPatient]);
     } else {
-      // This logic handles updating a single billing record (e.g., marking as paid).
       setBilling(
         billing.map((b) =>
           b.id === updatedBillingForPatient.id ? updatedBillingForPatient : b
@@ -160,6 +175,51 @@ export default function Home() {
       description: "The patient's billing information has been updated.",
     });
   };
+
+  const handleAddNewAppointment = () => {
+    setAppointmentToEdit(null);
+    setIsAppointmentFormOpen(true);
+  };
+
+  const handleEditAppointment = (appointment: Appointment) => {
+    setAppointmentToEdit(appointment);
+    setIsAppointmentFormOpen(true);
+  };
+
+  const handlePromptDeleteAppointment = (appointmentId: string) => {
+    setAppointmentToDelete(appointmentId);
+    setIsAppointmentAlertOpen(true);
+  };
+
+  const handleDeleteAppointment = () => {
+    if (!appointmentToDelete) return;
+    setAppointments(appointments.filter((a) => a.id !== appointmentToDelete));
+    toast({
+      title: "Appointment Deleted",
+      description: "The appointment has been removed from the schedule.",
+      variant: "destructive",
+    });
+    setAppointmentToDelete(null);
+    setIsAppointmentAlertOpen(false);
+  };
+  
+  const handleAppointmentFormSubmit = (values: Appointment) => {
+    const isEditing = !!appointmentToEdit;
+    if (isEditing) {
+      setAppointments(appointments.map((a) => (a.id === values.id ? values : a)));
+      toast({
+        title: "Appointment Updated",
+        description: `The appointment has been successfully updated.`,
+      });
+    } else {
+      setAppointments([values, ...appointments]);
+      toast({
+        title: "Appointment Scheduled",
+        description: `The appointment has been successfully added to the schedule.`,
+      });
+    }
+    setIsAppointmentFormOpen(false);
+  };
   
 
   const patientBillingRecords = useMemo(() => {
@@ -169,6 +229,7 @@ export default function Home() {
 
   const navItems = [
     { id: "patients", label: "Patients", icon: Users, onClick: () => setActiveView("patients") },
+    { id: "appointments", label: "Appointments", icon: CalendarDays, onClick: () => setActiveView("appointments") },
     { id: "billing", label: "Billing Info", icon: IndianRupee, onClick: () => setActiveView("billing") },
     { id: "scan", label: "Scan to Pay", icon: QrCode, onClick: () => setActiveView("scan") },
   ];
@@ -240,6 +301,14 @@ export default function Home() {
                   />
                 </div>
               </>
+            ) : activeView === 'appointments' ? (
+              <AppointmentsView
+                appointments={appointments}
+                patients={patients}
+                onAdd={handleAddNewAppointment}
+                onEdit={handleEditAppointment}
+                onDelete={handlePromptDeleteAppointment}
+              />
             ) : activeView === 'billing' ? (
               <AllBilling patients={patients} billing={billing} />
             ) : (
@@ -254,6 +323,14 @@ export default function Home() {
         onOpenChange={setIsFormOpen}
         patient={selectedPatient}
         onSubmit={handleFormSubmit}
+      />
+
+      <AppointmentForm
+        isOpen={isAppointmentFormOpen}
+        onOpenChange={setIsAppointmentFormOpen}
+        patients={patients}
+        appointment={appointmentToEdit}
+        onSubmit={handleAppointmentFormSubmit}
       />
 
       <PatientDetails
@@ -276,6 +353,21 @@ export default function Home() {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={isAppointmentAlertOpen} onOpenChange={setIsAppointmentAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete this appointment.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteAppointment}>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
