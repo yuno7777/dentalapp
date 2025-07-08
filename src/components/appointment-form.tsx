@@ -84,7 +84,7 @@ export function AppointmentForm({
         reason: appointment?.reason || "",
       });
     }
-  }, [isOpen, appointment, form]);
+  }, [isOpen, appointment]);
 
   const handleFormSubmit = (values: z.infer<typeof formSchema>) => {
     onSubmit({
@@ -146,7 +146,7 @@ export function AppointmentForm({
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>Date</FormLabel>
-                    <DatePicker date={field.value} setDate={field.onChange} />
+                    <DatePicker date={field.value} setDate={(date) => field.onChange(date)} />
                     <FormMessage />
                   </FormItem>
                 )}
