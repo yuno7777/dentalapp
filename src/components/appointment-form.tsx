@@ -61,6 +61,7 @@ export function AppointmentForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       patientId: "",
+      date: new Date(),
       time: "",
       reason: "",
     },
@@ -68,10 +69,16 @@ export function AppointmentForm({
 
   useEffect(() => {
     if (isOpen) {
+      const now = new Date();
+      // Format time as HH:MM for the input default
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const currentTime = `${hours}:${minutes}`;
+
       form.reset({
         patientId: appointment?.patientId || "",
         date: appointment ? new Date(appointment.date) : new Date(),
-        time: appointment?.time || "",
+        time: appointment?.time || currentTime,
         reason: appointment?.reason || "",
       });
     }
