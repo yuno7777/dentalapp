@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Clipboard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -22,13 +21,7 @@ export function ScanToPay() {
 
     return (
         <div className="p-4 flex flex-col justify-center items-center pt-10 gap-6">
-            <div className="flex items-center gap-4">
-                <Avatar className="h-12 w-12">
-                    <AvatarImage src="https://placehold.co/48x48.png" alt={payeeName} data-ai-hint="profile person"/>
-                    <AvatarFallback>SS</AvatarFallback>
-                </Avatar>
-                <h2 className="text-2xl font-bold">{payeeName}</h2>
-            </div>
+            <h2 className="text-2xl font-bold">{payeeName}</h2>
             
             <Card className="w-full max-w-xs shadow-lg">
                 <CardContent className="flex flex-col items-center gap-4 p-4">
