@@ -27,19 +27,19 @@ export function DashboardView({ patients, billing, appointments }: DashboardView
     return billing
       .filter(b => isSameMonth(new Date(b.date), now))
       .reduce((sum, b) => sum + (b.paidAmount ?? 0), 0);
-  }, [billing]);
+  }, [billing, now]);
 
   const todaysAppointments = useMemo(() => {
     return appointments.filter(a => isSameDay(new Date(a.date), now)).length;
-  }, [appointments]);
+  }, [appointments, now]);
   
-  const billingTrends = useMemo(() => {
+  const revenueTrends = useMemo(() => {
     const last6Months = Array.from({ length: 6 }, (_, i) => subMonths(now, 5 - i));
     
     const monthlyData = last6Months.map(month => {
       const total = billing
         .filter(b => isSameMonth(new Date(b.date), month))
-        .reduce((sum, b) => sum + b.cost, 0);
+        .reduce((sum, b) => sum + (b.paidAmount ?? 0), 0);
         
       return {
         month: format(month, "MMM"),
@@ -48,12 +48,12 @@ export function DashboardView({ patients, billing, appointments }: DashboardView
     });
 
     return monthlyData;
-  }, [billing]);
+  }, [billing, now]);
 
   const chartConfig = {
     total: {
-      label: "Billed",
-      color: "hsl(var(--primary))",
+      label: "Revenue",
+      color: "hsl(var(--success))",
     },
   };
 
@@ -98,12 +98,12 @@ export function DashboardView({ patients, billing, appointments }: DashboardView
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5"/>
-            Billing Trends (Last 6 Months)
+            Revenue Trends (Last 6 Months)
           </CardTitle>
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[300px] w-full">
-            <BarChart accessibilityLayer data={billingTrends}>
+            <BarChart accessibilityLayer data={revenueTrends}>
               <XAxis
                 dataKey="month"
                 tickLine={false}
