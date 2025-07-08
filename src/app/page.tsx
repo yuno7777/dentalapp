@@ -138,12 +138,22 @@ export default function Home() {
     setSelectedPatient(null);
   };
 
-  const handleBillingUpdate = (updatedBilling: Billing[] | Billing) => {
-    if (Array.isArray(updatedBilling)) {
-      setBilling(updatedBilling);
+  const handleBillingUpdate = (updatedBillingForPatient: Billing[] | Billing) => {
+    if (Array.isArray(updatedBillingForPatient)) {
+      if (!selectedPatient) return;
+      // This logic handles adding or deleting billing entries for a specific patient.
+      // It replaces all billing records for the selected patient with the new, updated list.
+      const otherPatientsBilling = billing.filter(
+        (b) => b.patientId !== selectedPatient.id
+      );
+      setBilling([...otherPatientsBilling, ...updatedBillingForPatient]);
     } else {
-      // It's a single record update from the QR code dialog
-      setBilling(billing.map(b => b.id === updatedBilling.id ? updatedBilling : b));
+      // This logic handles updating a single billing record (e.g., marking as paid).
+      setBilling(
+        billing.map((b) =>
+          b.id === updatedBillingForPatient.id ? updatedBillingForPatient : b
+        )
+      );
     }
     toast({
       title: "Billing Updated",
