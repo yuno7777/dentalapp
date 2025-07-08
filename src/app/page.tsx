@@ -218,7 +218,24 @@ export default function Home() {
           <aside className="w-80 p-4 flex flex-col justify-between">
             <div>
               <div className="flex flex-col mb-4">
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-3 mb-1">
+                  <div className="bg-primary/10 text-primary p-2 rounded-full">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-6 w-6"
+                    >
+                      <path d="M9.36 1.503A2.034 2.034 0 0 1 11.393 1h1.214a2.034 2.034 0 0 1 2.033 1.503l.923 5.535A4.068 4.068 0 0 1 16 11.235v.002c0 1.27-1.116 2.43-2.126 3.256a12.86 12.86 0 0 1-3.748 2.515 12.86 12.86 0 0 1-3.748-2.515C5.116 13.667 4 12.506 4 11.237v-.002a4.068 4.068 0 0 1 .43-2.197l.923-5.535Z" />
+                      <path d="M4.64 15.5c.63 1.25 1.48 2.37 2.45 3.25a12.86 12.86 0 0 0 3.91 2.5 12.86 12.86 0 0 0 3.91-2.5c.97-.88 1.82-2 2.45-3.25" />
+                    </svg>
+                  </div>
                   <h1 className="text-foreground text-xl font-bold">
                     Dr. Shailendra Satarkar
                   </h1>
