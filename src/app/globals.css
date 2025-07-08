@@ -8,26 +8,26 @@ body {
 
 @layer base {
   :root {
-    --background: 210 16% 8%; /* #111418 */
-    --foreground: 0 0% 100%; /* #ffffff */
-    --card: 210 16% 8%; /* #111418 */
-    --card-foreground: 0 0% 100%;
-    --popover: 210 16% 8%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 231 48% 68%;
-    --primary-foreground: 231 48% 15%;
-    --secondary: 214 16% 13%; /* #1b2127 for table header */
-    --secondary-foreground: 0 0% 100%;
-    --muted: 216 17% 19%; /* #283039 for active items */
-    --muted-foreground: 215 15% 74%; /* #9cabba */
-    --accent: 216 17% 19%; /* #283039 for hover/active */
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 62.8% 30.6%;
+    --background: 0 0% 100%;
+    --foreground: 210 16% 8%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 16% 8%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 16% 8%;
+    --primary: 231 48% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 210 16% 8%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 210 16% 8%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --success: 140 65% 55%;
-    --border: 213 19% 28%; /* #3b4754 */
-    --input: 216 17% 19%; /* #283039 */
-    --ring: 231 48% 68%;
+    --success: 142.1 76.2% 36.3%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 231 48% 48%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;

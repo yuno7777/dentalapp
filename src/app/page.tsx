@@ -29,6 +29,7 @@ import {
 import { cn } from "@/lib/utils";
 import { ScanToPay } from "@/components/scan-to-pay";
 import { DashboardView } from "@/components/dashboard-view";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const ToothIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -242,7 +243,7 @@ export default function Home() {
       <main className="flex h-full min-h-screen grow justify-center p-6">
         <div className="flex w-full max-w-7xl gap-1">
           {/* Sidebar */}
-          <aside className="w-80 p-4">
+          <aside className="w-80 p-4 flex flex-col">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col">
                 <div className="flex items-center gap-2 mb-1">
@@ -272,6 +273,9 @@ export default function Home() {
                   </button>
                 ))}
               </nav>
+            </div>
+            <div className="mt-auto">
+              <ThemeToggle />
             </div>
           </aside>
 
