@@ -33,7 +33,6 @@ import {
   SheetFooter,
   SheetClose,
 } from "@/components/ui/sheet";
-import { DatePicker } from "./ui/date-picker";
 
 const formSchema = z.object({
   patientId: z.string().min(1, "Please select a patient."),
@@ -46,7 +45,6 @@ type AppointmentFormProps = {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   patients: Patient[];
-  appointment?: Appointment | null;
   onSubmit: (values: Appointment) => void;
   selectedDate?: Date;
 };
@@ -55,7 +53,6 @@ export function AppointmentForm({
   isOpen,
   onOpenChange,
   patients,
-  appointment,
   onSubmit,
   selectedDate,
 }: AppointmentFormProps) {
@@ -69,10 +66,8 @@ export function AppointmentForm({
     },
   });
   
-  const { reset, setValue } = form;
+  const { reset } = form;
 
-  // This effect handles the initial population of the form.
-  // It runs when the form opens, or when the specific appointment we are editing changes.
   useEffect(() => {
     if (isOpen) {
       const now = new Date();
@@ -81,27 +76,18 @@ export function AppointmentForm({
       const currentTime = `${hours}:${minutes}`;
 
       reset({
-        patientId: appointment?.patientId || "",
-        // When editing, use the appointment's date. When creating, use the selected date from the calendar.
-        date: appointment ? new Date(appointment.date) : selectedDate || new Date(),
-        time: appointment?.time || currentTime,
-        reason: appointment?.reason || "",
+        patientId: "",
+        date: selectedDate || new Date(),
+        time: currentTime,
+        reason: "",
       });
     }
-  }, [isOpen, appointment, reset]); // Note: `selectedDate` is intentionally omitted to fix the editing bug.
-
-  // This second effect is ONLY for creating new appointments.
-  // It syncs the date field if the user changes the date on the main calendar *while the form is open*.
-  useEffect(() => {
-    if (isOpen && !appointment && selectedDate) {
-      setValue("date", selectedDate);
-    }
-  }, [isOpen, appointment, selectedDate, setValue]);
+  }, [isOpen, selectedDate, reset]);
 
 
   const handleFormSubmit = (values: z.infer<typeof formSchema>) => {
     onSubmit({
-      id: appointment?.id || `appt-${new Date().getTime()}`,
+      id: `appt-${new Date().getTime()}`,
       patientId: values.patientId,
       date: values.date.toISOString(),
       time: values.time,
@@ -120,13 +106,9 @@ export function AppointmentForm({
             className="flex flex-col h-full"
           >
             <SheetHeader>
-              <SheetTitle>
-                {appointment ? "Edit Appointment" : "Schedule New Appointment"}
-              </SheetTitle>
+              <SheetTitle>Schedule New Appointment</SheetTitle>
               <SheetDescription>
-                {appointment
-                  ? "Update the appointment details."
-                  : "Fill in the details to schedule a new appointment."}
+                Fill in the details to schedule a new appointment.
               </SheetDescription>
             </SheetHeader>
 
@@ -153,20 +135,6 @@ export function AppointmentForm({
                   </FormItem>
                 )}
               />
-              {/* This date picker only shows when editing. For new appointments, date is taken from main calendar. */}
-              {appointment && ( 
-                <FormField
-                  control={form.control}
-                  name="date"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Date</FormLabel>
-                      <DatePicker date={field.value} setDate={field.onChange} />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
               <FormField
                 control={form.control}
                 name="time"

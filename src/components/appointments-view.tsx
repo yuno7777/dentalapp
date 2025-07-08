@@ -6,20 +6,19 @@ import { format, isSameDay } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Edit, Trash2 } from "lucide-react";
+import { PlusCircle, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 type AppointmentsViewProps = {
   appointments: Appointment[];
   patients: Patient[];
   onAdd: () => void;
-  onEdit: (appointment: Appointment) => void;
   onDelete: (appointmentId: string) => void;
   selectedDate: Date | undefined;
   setSelectedDate: (date: Date | undefined) => void;
 };
 
-export function AppointmentsView({ appointments, patients, onAdd, onEdit, onDelete, selectedDate, setSelectedDate }: AppointmentsViewProps) {
+export function AppointmentsView({ appointments, patients, onAdd, onDelete, selectedDate, setSelectedDate }: AppointmentsViewProps) {
   const patientMap = useMemo(() => {
     return new Map(patients.map((p) => [p.id, p.name]));
   }, [patients]);
@@ -81,9 +80,6 @@ export function AppointmentsView({ appointments, patients, onAdd, onEdit, onDele
                       <div className="flex items-center gap-2 self-end sm:self-center">
                         <Badge variant="outline" className="whitespace-nowrap">{formatTime(app.time)}</Badge>
                         <div className="flex items-center">
-                            <Button variant="ghost" size="icon" onClick={() => onEdit(app)}>
-                                <Edit className="h-4 w-4" />
-                            </Button>
                             <Button variant="ghost" size="icon" onClick={() => onDelete(app.id)}>
                                 <Trash2 className="h-4 w-4 text-destructive" />
                             </Button>

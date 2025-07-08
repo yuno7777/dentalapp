@@ -56,7 +56,6 @@ export default function Home() {
   const [patientToDelete, setPatientToDelete] = useState<string | null>(null);
   const [activeView, setActiveView] = useState("patients");
   const [isAppointmentFormOpen, setIsAppointmentFormOpen] = useState(false);
-  const [appointmentToEdit, setAppointmentToEdit] = useState<Appointment | null>(null);
   const [appointmentToDelete, setAppointmentToDelete] = useState<string | null>(null);
   const [isAppointmentAlertOpen, setIsAppointmentAlertOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
@@ -180,12 +179,6 @@ export default function Home() {
   };
 
   const handleAddNewAppointment = () => {
-    setAppointmentToEdit(null);
-    setIsAppointmentFormOpen(true);
-  };
-
-  const handleEditAppointment = (appointment: Appointment) => {
-    setAppointmentToEdit(appointment);
     setIsAppointmentFormOpen(true);
   };
 
@@ -207,20 +200,11 @@ export default function Home() {
   };
   
   const handleAppointmentFormSubmit = (values: Appointment) => {
-    const isEditing = !!appointmentToEdit;
-    if (isEditing) {
-      setAppointments(appointments.map((a) => (a.id === values.id ? values : a)));
-      toast({
-        title: "Appointment Updated",
-        description: `The appointment has been successfully updated.`,
-      });
-    } else {
-      setAppointments([values, ...appointments]);
-      toast({
-        title: "Appointment Scheduled",
-        description: `The appointment has been successfully added to the schedule.`,
-      });
-    }
+    setAppointments([values, ...appointments]);
+    toast({
+      title: "Appointment Scheduled",
+      description: `The appointment has been successfully added to the schedule.`,
+    });
     setIsAppointmentFormOpen(false);
   };
   
@@ -319,7 +303,6 @@ export default function Home() {
                 appointments={appointments}
                 patients={patients}
                 onAdd={handleAddNewAppointment}
-                onEdit={handleEditAppointment}
                 onDelete={handlePromptDeleteAppointment}
                 selectedDate={selectedDate}
                 setSelectedDate={(date) => {
@@ -348,7 +331,6 @@ export default function Home() {
         isOpen={isAppointmentFormOpen}
         onOpenChange={setIsAppointmentFormOpen}
         patients={patients}
-        appointment={appointmentToEdit}
         onSubmit={handleAppointmentFormSubmit}
         selectedDate={selectedDate}
       />
