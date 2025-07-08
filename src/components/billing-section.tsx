@@ -194,13 +194,13 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
                     <DialogHeader>
                         <DialogTitle>Scan to Pay</DialogTitle>
                         <DialogDescription>
-                            Scan this QR code with a payment app to pay ₹{paymentRecord?.cost.toFixed(2)} for "{paymentRecord?.service}".
+                           Please scan the QR code to pay. You will need to manually enter the amount: ₹{paymentRecord?.cost.toFixed(2)} for "{paymentRecord?.service}".
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex justify-center items-center p-4 bg-white rounded-lg">
                         {paymentRecord && (
                             <Image
-                                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=abhisheksatarkar098@okaxis&pn=DentalFlow&am=${paymentRecord.cost}&tn=Payment for ${paymentRecord.service}`}
+                                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=abhisheksatarkar098@okaxis&pn=DentalFlow`}
                                 alt="Payment QR Code"
                                 width={250}
                                 height={250}
