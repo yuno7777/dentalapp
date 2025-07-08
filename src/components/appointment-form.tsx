@@ -68,6 +68,8 @@ export function AppointmentForm({
   });
 
   useEffect(() => {
+    // This effect only runs when the sheet is opened or the appointment to edit changes.
+    // It resets the form with the correct default values.
     if (isOpen) {
       const now = new Date();
       // Format time as HH:MM for the input default
