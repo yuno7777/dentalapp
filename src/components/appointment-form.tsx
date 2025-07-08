@@ -82,7 +82,7 @@ export function AppointmentForm({
         reason: appointment?.reason || "",
       });
     }
-  }, [isOpen, appointment, form]);
+  }, [isOpen, appointment]);
 
   const handleFormSubmit = (values: z.infer<typeof formSchema>) => {
     onSubmit({
