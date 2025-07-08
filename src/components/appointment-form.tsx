@@ -68,7 +68,11 @@ export function AppointmentForm({
       reason: "",
     },
   });
+  
+  const { reset, setValue } = form;
 
+  // This effect handles the initial population of the form.
+  // It runs when the form opens, or when the specific appointment we are editing changes.
   useEffect(() => {
     if (isOpen) {
       const now = new Date();
@@ -76,14 +80,24 @@ export function AppointmentForm({
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const currentTime = `${hours}:${minutes}`;
 
-      form.reset({
+      reset({
         patientId: appointment?.patientId || "",
+        // When editing, use the appointment's date. When creating, use the selected date from the calendar.
         date: appointment ? new Date(appointment.date) : selectedDate || new Date(),
         time: appointment?.time || currentTime,
         reason: appointment?.reason || "",
       });
     }
-  }, [isOpen, appointment, selectedDate, form]);
+  }, [isOpen, appointment, reset]); // Note: `selectedDate` is intentionally omitted to fix the editing bug.
+
+  // This second effect is ONLY for creating new appointments.
+  // It syncs the date field if the user changes the date on the main calendar *while the form is open*.
+  useEffect(() => {
+    if (isOpen && !appointment && selectedDate) {
+      setValue("date", selectedDate);
+    }
+  }, [isOpen, appointment, selectedDate, setValue]);
+
 
   const handleFormSubmit = (values: z.infer<typeof formSchema>) => {
     onSubmit({
@@ -139,7 +153,8 @@ export function AppointmentForm({
                   </FormItem>
                 )}
               />
-              {appointment && (
+              {/* This date picker only shows when editing. For new appointments, date is taken from main calendar. */}
+              {appointment && ( 
                 <FormField
                   control={form.control}
                   name="date"
