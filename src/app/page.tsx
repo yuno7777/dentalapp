@@ -12,6 +12,7 @@ import {
 import { PatientTable } from "@/components/patient-table";
 import { PatientForm } from "@/components/patient-form";
 import { PatientDetails } from "@/components/patient-details";
+import { AllBilling } from "@/components/all-billing";
 import { useToast } from "@/hooks/use-toast";
 import {
   AlertDialog,
@@ -47,7 +48,7 @@ export default function Home() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [patientToDelete, setPatientToDelete] = useState<string | null>(null);
-  const [activeNavItem, setActiveNavItem] = useState("patients");
+  const [activeView, setActiveView] = useState("patients");
   const dataLoaded = useRef(false);
 
   const { toast } = useToast();
@@ -136,13 +137,19 @@ export default function Home() {
     setSelectedPatient(null);
   };
 
-  const handleBillingUpdate = (updatedBilling: Billing[]) => {
-    setBilling(updatedBilling);
+  const handleBillingUpdate = (updatedBilling: Billing[] | Billing) => {
+    if (Array.isArray(updatedBilling)) {
+      setBilling(updatedBilling);
+    } else {
+      // It's a single record update from the QR code dialog
+      setBilling(billing.map(b => b.id === updatedBilling.id ? updatedBilling : b));
+    }
     toast({
       title: "Billing Updated",
       description: "The patient's billing information has been updated.",
     });
   };
+  
 
   const patientBillingRecords = useMemo(() => {
     if (!selectedPatient) return [];
@@ -150,8 +157,8 @@ export default function Home() {
   }, [selectedPatient, billing]);
 
   const navItems = [
-    { id: "patients", label: "Patients", icon: Users, onClick: () => setActiveNavItem("patients") },
-    { id: "billing", label: "Billing Info", icon: IndianRupee },
+    { id: "patients", label: "Patients", icon: Users, onClick: () => setActiveView("patients") },
+    { id: "billing", label: "Billing Info", icon: IndianRupee, onClick: () => setActiveView("billing") },
   ];
 
   return (
@@ -180,7 +187,7 @@ export default function Home() {
                     disabled={!item.onClick}
                     className={cn(
                       "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium leading-normal text-foreground transition-colors",
-                      activeNavItem === item.id ? "bg-accent" : "hover:bg-accent/50",
+                      activeView === item.id ? "bg-accent" : "hover:bg-accent/50",
                       !item.onClick && "cursor-not-allowed opacity-50"
                     )}
                   >
@@ -194,30 +201,36 @@ export default function Home() {
 
           {/* Main Content */}
           <div className="flex-1 max-w-[960px] flex-col">
-            <div className="px-4 py-3 flex justify-between items-center gap-4">
-              <div className="relative flex-1">
-                <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search patients"
-                  className="h-12 w-full rounded-lg bg-input pl-12 text-base text-foreground placeholder:text-muted-foreground focus:ring-0 border-none"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              <Button onClick={handleAddNew}>
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Add Patient
-              </Button>
-            </div>
-            <div className="p-4">
-              <PatientTable
-                patients={filteredPatients}
-                onEdit={handleEdit}
-                onDelete={handlePromptDelete}
-                onView={handleView}
-              />
-            </div>
+             {activeView === 'patients' ? (
+              <>
+                <div className="px-4 py-3 flex justify-between items-center gap-4">
+                  <div className="relative flex-1">
+                    <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-muted-foreground" />
+                    <Input
+                      type="search"
+                      placeholder="Search patients"
+                      className="h-12 w-full rounded-lg bg-input pl-12 text-base text-foreground placeholder:text-muted-foreground focus:ring-0 border-none"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  <Button onClick={handleAddNew}>
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Add Patient
+                  </Button>
+                </div>
+                <div className="p-4">
+                  <PatientTable
+                    patients={filteredPatients}
+                    onEdit={handleEdit}
+                    onDelete={handlePromptDelete}
+                    onView={handleView}
+                  />
+                </div>
+              </>
+            ) : (
+              <AllBilling patients={patients} billing={billing} />
+            )}
           </div>
         </div>
       </main>

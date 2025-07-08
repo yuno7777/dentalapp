@@ -23,7 +23,7 @@ type PatientDetailsProps = {
   onOpenChange: (isOpen: boolean) => void;
   patient: Patient | null;
   billingRecords: Billing[];
-  onBillingUpdate: (updatedRecords: Billing[]) => void;
+  onBillingUpdate: (updatedRecords: Billing[] | Billing) => void;
 };
 
 export function PatientDetails({
