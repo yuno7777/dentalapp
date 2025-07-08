@@ -243,9 +243,9 @@ export default function Home() {
       <main className="flex h-full min-h-screen grow justify-center p-6">
         <div className="flex w-full max-w-7xl gap-1">
           {/* Sidebar */}
-          <aside className="w-80 p-4 flex flex-col">
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col">
+          <aside className="w-80 p-4 flex flex-col justify-between">
+            <div>
+              <div className="flex flex-col mb-4">
                 <div className="flex items-center gap-2 mb-1">
                   <ToothIcon className="h-7 w-7 text-primary" />
                   <h1 className="text-foreground text-xl font-bold">
@@ -274,7 +274,7 @@ export default function Home() {
                 ))}
               </nav>
             </div>
-            <div className="mt-auto">
+            <div>
               <ThemeToggle />
             </div>
           </aside>
