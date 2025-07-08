@@ -38,7 +38,7 @@ export function PatientTable({
         <TableHeader>
           <TableRow className="bg-secondary hover:bg-secondary">
             <TableHead className="text-foreground font-medium">Name</TableHead>
-            <TableHead className="text-foreground font-medium">Last Visit</TableHead>
+            <TableHead className="text-foreground font-medium">Last Updated</TableHead>
             <TableHead>
               <span className="sr-only">Actions</span>
             </TableHead>
@@ -50,7 +50,7 @@ export function PatientTable({
               <TableRow key={patient.id} className="border-border">
                 <TableCell className="font-medium text-foreground">{patient.name}</TableCell>
                 <TableCell className="text-muted-foreground">
-                  {format(new Date(patient.lastAppointment), "PPP")}
+                  {format(new Date(patient.lastUpdated), "PPP")}
                 </TableCell>
                 <TableCell>
                   <DropdownMenu>

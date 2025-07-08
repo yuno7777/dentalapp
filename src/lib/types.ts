@@ -3,7 +3,7 @@ export type Patient = {
   name: string;
   phone: string;
   medicalHistory: string;
-  lastAppointment: string; 
+  lastUpdated: string; 
 };
 
 export type Billing = {

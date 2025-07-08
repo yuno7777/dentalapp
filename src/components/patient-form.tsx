@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { DatePicker } from "@/components/ui/date-picker";
 import {
   Sheet,
   SheetContent,
@@ -32,7 +31,6 @@ const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
   phone: z.string().min(10, "Phone number seems too short."),
   medicalHistory: z.string().optional(),
-  lastAppointment: z.date({ required_error: "An appointment date is required." }),
 });
 
 type PatientFormProps = {
@@ -54,7 +52,6 @@ export function PatientForm({
       name: "",
       phone: "",
       medicalHistory: "",
-      lastAppointment: undefined,
     },
   });
 
@@ -64,7 +61,6 @@ export function PatientForm({
         name: patient?.name || "",
         phone: patient?.phone || "",
         medicalHistory: patient?.medicalHistory || "",
-        lastAppointment: patient ? new Date(patient.lastAppointment) : undefined,
       });
     }
   }, [isOpen, patient, form]);
@@ -74,7 +70,7 @@ export function PatientForm({
       ...values,
       id: patient?.id || new Date().toISOString(),
       medicalHistory: values.medicalHistory || "None.",
-      lastAppointment: values.lastAppointment.toISOString(),
+      lastUpdated: new Date().toISOString(),
     });
     form.reset();
     onOpenChange(false);
@@ -121,19 +117,6 @@ export function PatientForm({
                     <FormLabel>Phone Number</FormLabel>
                     <FormControl>
                       <Input placeholder="555-123-4567" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="lastAppointment"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Last Appointment</FormLabel>
-                    <FormControl>
-                        <DatePicker date={field.value} setDate={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

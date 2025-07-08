@@ -61,8 +61,8 @@ export function PatientDetails({
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-3 text-muted-foreground" />
                   <span>
-                    Last visit:{" "}
-                    {format(new Date(patient.lastAppointment), "MMMM d, yyyy")}
+                    Last updated:{" "}
+                    {format(new Date(patient.lastUpdated), "MMMM d, yyyy")}
                   </span>
                 </div>
               </CardContent>
