@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Clipboard } from "lucide-react";
@@ -9,7 +9,8 @@ import { useToast } from "@/hooks/use-toast";
 
 export function ScanToPay() {
     const { toast } = useToast();
-    const upiId = "abhisheksatarkar098@okaxis";
+    const upiId = "satarkarsd@oksbi";
+    const payeeName = "Shailendra Satarkar";
 
     const handleCopy = () => {
         navigator.clipboard.writeText(upiId);
@@ -20,38 +21,35 @@ export function ScanToPay() {
     };
 
     return (
-        <div className="p-4 flex justify-center items-start pt-10">
-            <Card className="w-full max-w-sm shadow-2xl">
-                <CardHeader className="items-center text-center pb-2">
-                    <div className="flex items-center gap-4">
-                        <Avatar>
-                            <AvatarImage src="https://placehold.co/40x40.png" alt="Abhishek Satarkar" data-ai-hint="profile person"/>
-                            <AvatarFallback>AS</AvatarFallback>
-                        </Avatar>
-                        <CardTitle className="text-2xl font-bold">Abhishek Satarkar</CardTitle>
-                    </div>
-                </CardHeader>
-                <CardContent className="flex flex-col items-center gap-4">
-                    <div className="p-4 bg-white rounded-lg mt-2">
+        <div className="p-4 flex flex-col justify-center items-center pt-10 gap-6">
+            <div className="flex items-center gap-4">
+                <Avatar className="h-12 w-12">
+                    <AvatarImage src="https://placehold.co/48x48.png" alt={payeeName} data-ai-hint="profile person"/>
+                    <AvatarFallback>SS</AvatarFallback>
+                </Avatar>
+                <h2 className="text-2xl font-bold">{payeeName}</h2>
+            </div>
+            
+            <Card className="w-full max-w-xs shadow-lg">
+                <CardContent className="flex flex-col items-center gap-4 p-4">
+                    <div className="p-2 bg-white rounded-lg mt-2">
                         <Image
-                            src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=${upiId}&pn=Dr.%20Shailendra%20Satarkar`}
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}`}
                             alt="Payment QR Code"
                             width={250}
                             height={250}
                         />
                     </div>
-                    <p className="text-sm text-muted-foreground">Scan to pay with any UPI app</p>
-                    <div className="w-full p-3 bg-secondary rounded-lg flex flex-col items-center gap-3 mt-2">
-                         <p className="font-mono text-sm text-center">Punjab National Bank ****3832</p>
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <span>UPI ID: {upiId}</span>
-                            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleCopy}>
-                                <Clipboard className="h-4 w-4" />
-                            </Button>
-                        </div>
+                    <div className="w-full p-3 bg-secondary rounded-lg flex items-center justify-between gap-2 mt-2">
+                        <span className="font-mono text-sm text-center w-full">UPI ID: {upiId}</span>
+                        <Button variant="ghost" size="icon" className="h-7 w-7 flex-shrink-0" onClick={handleCopy}>
+                            <Clipboard className="h-4 w-4" />
+                        </Button>
                     </div>
                 </CardContent>
             </Card>
+
+            <p className="text-sm text-muted-foreground">Scan to pay with any UPI app</p>
         </div>
     );
 }

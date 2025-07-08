@@ -101,6 +101,9 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
                 return "destructive";
         }
     }
+    
+    const upiId = "satarkarsd@oksbi";
+    const payeeName = "Shailendra Satarkar";
 
     return (
         <>
@@ -213,13 +216,13 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
                     <DialogHeader>
                         <DialogTitle>Scan to Pay</DialogTitle>
                         <DialogDescription>
-                           Please scan the QR code to pay. You will need to manually enter the remaining amount: ₹{(paymentRecord?.cost ?? 0 - (paymentRecord?.paidAmount ?? 0)).toFixed(2)} for "{paymentRecord?.service}".
+                           Please scan the QR code to pay. The outstanding amount of ₹{((paymentRecord?.cost ?? 0) - (paymentRecord?.paidAmount ?? 0)).toFixed(2)} for "{paymentRecord?.service}" has been pre-filled.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex justify-center items-center p-4 bg-white rounded-lg">
                         {paymentRecord && (
                             <Image
-                                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=abhisheksatarkar098@okaxis&pn=Dr.%20Shailendra%20Satarkar`}
+                                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${((paymentRecord.cost) - (paymentRecord.paidAmount ?? 0)).toFixed(2)}`}
                                 alt="Payment QR Code"
                                 width={250}
                                 height={250}
