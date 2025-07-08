@@ -5,10 +5,9 @@ import type { Patient, Billing } from "@/lib/types";
 import { getPatients, getBilling } from "@/lib/data";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Users, PlusCircle } from "lucide-react";
+import { Users, PlusCircle, IndianRupee } from "lucide-react";
 import {
   MagnifyingGlassIcon,
-  CurrencyCircleDollarIcon,
 } from "@/components/icons";
 import { PatientTable } from "@/components/patient-table";
 import { PatientForm } from "@/components/patient-form";
@@ -152,7 +151,7 @@ export default function Home() {
 
   const navItems = [
     { id: "patients", label: "Patients", icon: Users, onClick: () => setActiveNavItem("patients") },
-    { id: "billing", label: "Billing Info", icon: CurrencyCircleDollarIcon },
+    { id: "billing", label: "Billing Info", icon: IndianRupee },
   ];
 
   return (

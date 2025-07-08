@@ -98,7 +98,7 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
                                 <TableRow key={record.id}>
                                     <TableCell className="font-medium">{record.service}</TableCell>
                                     <TableCell>{format(new Date(record.date), "PPP")}</TableCell>
-                                    <TableCell>${record.cost.toFixed(2)}</TableCell>
+                                    <TableCell>₹{record.cost.toFixed(2)}</TableCell>
                                     <TableCell><Badge variant={getStatusVariant(record.status)}>{record.status}</Badge></TableCell>
                                     <TableCell>
                                         <Button variant="ghost" size="icon" onClick={() => handleDeleteBilling(record.id)}>
@@ -137,7 +137,7 @@ export function BillingSection({ patient, billingRecords, onBillingUpdate }: Bil
                                 )} />
                                 <FormField control={form.control} name="cost" render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Cost ($)</FormLabel>
+                                        <FormLabel>Cost (₹)</FormLabel>
                                         <FormControl><Input type="number" step="0.01" placeholder="150.00" {...field} /></FormControl>
                                         <FormMessage />
                                     </FormItem>
