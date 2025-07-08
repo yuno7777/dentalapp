@@ -55,7 +55,7 @@ export function AppointmentsView({ appointments, patients, onAdd, onEdit, onDele
       </div>
       <div className="md:col-span-2">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
+          <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <CardTitle>
                 Appointments for {selectedDate ? format(selectedDate, "PPP") : "..."}
@@ -64,7 +64,7 @@ export function AppointmentsView({ appointments, patients, onAdd, onEdit, onDele
                 {dailyAppointments.length} appointment(s) scheduled for this day.
               </CardDescription>
             </div>
-            <Button size="sm" onClick={onAdd}>
+            <Button size="sm" onClick={onAdd} className="w-full sm:w-auto">
               <PlusCircle className="mr-2 h-4 w-4" />
               Schedule
             </Button>
@@ -73,13 +73,13 @@ export function AppointmentsView({ appointments, patients, onAdd, onEdit, onDele
             {dailyAppointments.length > 0 ? (
                 <ul className="space-y-4">
                   {dailyAppointments.map(app => (
-                    <li key={app.id} className="p-4 bg-secondary rounded-lg flex items-center justify-between gap-4">
+                    <li key={app.id} className="p-4 bg-secondary rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                       <div className="flex-1 space-y-1">
-                        <p className="font-semibold text-foreground">{patientMap.get(app.patientId) || 'Unknown Patient'}</p>
-                        <p className="text-sm text-muted-foreground">{app.reason}</p>
+                        <p className="font-semibold text-foreground break-words">{patientMap.get(app.patientId) || 'Unknown Patient'}</p>
+                        <p className="text-sm text-muted-foreground break-words">{app.reason}</p>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <Badge variant="outline">{formatTime(app.time)}</Badge>
+                      <div className="flex items-center gap-2 self-end sm:self-center">
+                        <Badge variant="outline" className="whitespace-nowrap">{formatTime(app.time)}</Badge>
                         <div className="flex items-center">
                             <Button variant="ghost" size="icon" onClick={() => onEdit(app)}>
                                 <Edit className="h-4 w-4" />
